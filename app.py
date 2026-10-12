@@ -2,25 +2,24 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# 1. Load Model dan Scaler
+# 1. Load Model Biner dan Scaler
 @st.cache_resource
 def load_model():
-    model = joblib.load('student_model.pkl')
+    # Load model yang sudah di-training HANYA dengan kelas Dropout (1) dan Graduate (0)
+    model = joblib.load('student_binary_model.pkl')
     scaler = joblib.load('scaler.pkl')
-    le = joblib.load('label_encoder.pkl')
-    return model, scaler, le
+    return model, scaler
 
-model, scaler, le = load_model()
+model, scaler = load_model()
 
 # 2. Judul Aplikasi
-st.title('🎓 Prediksi Status Mahasiswa (Dropout / Graduate)')
-st.write('Aplikasi ini memprediksi apakah seorang mahasiswa berisiko dropout atau akan lulus berdasarkan profil akademik dan demografinya.')
+st.title('🎓 Sistem Deteksi Dini Risiko Dropout Mahasiswa')
+st.write('Aplikasi ini menggunakan model klasifikasi biner untuk memprediksi probabilitas seorang mahasiswa berisiko tinggi putus kuliah (Dropout) atau berpotensi lulus (Graduate) berdasarkan data akademik dan sosial ekonominya.')
 
 # 3. Form Input Data
 st.sidebar.header('Masukkan Data Mahasiswa')
 
 def user_input_features():
-    
     tuition_fees = st.sidebar.selectbox('Tuition fees up to date (Uang Kuliah Lunas)', (0, 1))
     scholarship = st.sidebar.selectbox('Scholarship holder (Penerima Beasiswa)', (0, 1))
     gender = st.sidebar.selectbox('Gender (1: Pria, 0: Wanita)', (0, 1))
@@ -32,7 +31,7 @@ def user_input_features():
     sem1_approved = st.sidebar.number_input('SKS Sem 1 Lulus', min_value=0, max_value=20, value=5)
     sem2_approved = st.sidebar.number_input('SKS Sem 2 Lulus', min_value=0, max_value=20, value=5)
 
-# Dictionary ini HARUS memiliki kunci dan urutan yang sama persis dengan X_train di Colab
+    # Dictionary harus menyesuaikan jumlah fitur (32 fitur) persis dengan X_train
     data = {
         'Marital_status': 1,
         'Application_mode': 1,
@@ -46,7 +45,7 @@ def user_input_features():
         'Fathers_qualification': 1,
         'Mothers_occupation': 1,
         'Fathers_occupation': 1,
-        'Admission_grade': 120.0,              
+        'Admission_grade': 120.0,               
         'Displaced': 1,
         'Educational_special_needs': 0,
         'Debtor': debtor,
@@ -73,30 +72,23 @@ def user_input_features():
 
 input_df = user_input_features()
 
-# Menampilkan input user
 st.subheader('Data Input Mahasiswa')
 st.write(input_df)
 
 # 4. Melakukan Prediksi
-if st.button('Prediksi Status'):
-    # Melakukan scaling terlebih dahulu
+if st.button('Prediksi Risiko'):
+    # Scaling
     scaled_input = scaler.transform(input_df)
     
-    # Prediksi dengan model
-    prediction = model.predict(scaled_input)
-    prediction_proba = model.predict_proba(scaled_input)
-    
-    # Mengubah angka (0,1,2) kembali ke teks (Dropout, Enrolled, Graduate)
-    status = le.inverse_transform(prediction)[0]
+    # Memprediksi (0 = Graduate, 1 = Dropout)
+    prediction = model.predict(scaled_input)[0]
+    prediction_proba = model.predict_proba(scaled_input)[0]
     
     st.subheader('Hasil Prediksi:')
-    if status == 'Dropout':
-        st.error(f'⚠️ Mahasiswa ini berisiko: {status}')
-    elif status == 'Graduate':
-        st.success(f'✅ Mahasiswa ini diprediksi: {status}')
+    if prediction == 1:
+        st.error(f'⚠️ PERINGATAN: Mahasiswa diprediksi berisiko tinggi DROPOUT (Probabilitas: {prediction_proba[1]*100:.1f}%)')
     else:
-        st.warning(f'⏳ Status mahasiswa diprediksi: {status}')
-    
-    st.write('Probabilitas Prediksi:')
-    proba_df = pd.DataFrame(prediction_proba, columns=le.classes_)
-    st.write(proba_df)
+        st.success(f'✅ AMAN: Mahasiswa diprediksi GRADUATE (Probabilitas Lulus: {prediction_proba[0]*100:.1f}%)')
+        
+    st.write('---')
+    st.caption('Detail Probabilitas Model: Graduate (0): {:.1f}% | Dropout (1): {:.1f}%'.format(prediction_proba[0]*100, prediction_proba[1]*100))

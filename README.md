@@ -1,77 +1,45 @@
-# Proyek Akhir: Menyelesaikan Permasalahan Perusahaan Edutech 🎓
+# Proyek Akhir: Menyelesaikan Permasalahan Perusahaan Edutech
 
-## 1. Business Understanding
-**Latar Belakang:**
-Sebuah institusi pendidikan tinggi (Edutech) menghadapi tantangan berupa tingginya angka mahasiswa yang putus kuliah (*dropout*). Fenomena ini tidak hanya berdampak negatif pada reputasi institusi, tetapi juga mengganggu stabilitas finansial operasional kampus. 
+## Business Understanding
+Institusi pendidikan tinggi menghadapi tantangan besar terkait tingkat *dropout* (putus kuliah) mahasiswa, yang tidak hanya berdampak pada pendapatan institusi (hilangnya uang kuliah), tetapi juga mencoreng reputasi akademik universitas di mata publik dan lembaga akreditasi. Mengetahui mahasiswa mana yang berisiko gagal lebih awal sangat krusial bagi manajemen untuk dapat memberikan intervensi tepat waktu.
 
-**Tujuan Bisnis (*Business Objective*):**
-1. Mengidentifikasi faktor-faktor utama yang berkontribusi terhadap keputusan mahasiswa untuk *dropout*.
-2. Membangun model *Machine Learning* untuk memprediksi probabilitas kelulusan atau *dropout* sejak dini.
-3. Menciptakan dasbor interaktif (*Business Dashboard*) untuk memantau performa mahasiswa secara *real-time*.
+### Permasalahan Bisnis
+1. Bagaimana cara mendeteksi dini mahasiswa yang memiliki probabilitas tinggi untuk *dropout* sebelum mereka benar-benar keluar dari institusi?
+2. Faktor-faktor utama apa saja yang secara signifikan mendorong mahasiswa untuk *dropout*?
+3. Langkah pencegahan atau intervensi seperti apa yang bisa diterapkan institusi untuk menekan persentase *Dropout*?
 
-**Metrik Keberhasilan Bisnis:**
-- Menurunkan tingkat *dropout* mahasiswa sebesar 10-15% dalam satu tahun akademik berkat intervensi dini.
-- Meningkatkan *retention rate* (tingkat retensi) mahasiswa aktif.
+### Cakupan Proyek
+1. **Eksplorasi Data (EDA):** Mengidentifikasi korelasi antar variabel akademik dan non-akademik menggunakan metode univariat dan bivariat.
+2. **Data Preparation (Binary Classification):** Memfilter data untuk hanya melibatkan mahasiswa dengan status akhir yang jelas (*Graduate* vs *Dropout*) dalam pelatihan model (Label 0 dan 1). Data mahasiswa yang masih aktif (*Enrolled*) disisihkan sepenuhnya untuk dijadikan data uji prediksi di masa depan.
+3. **Pembuatan Dashboard:** Merancang *Business Dashboard* interaktif untuk memudahkan manajemen memantau metrik kelulusan.
+4. **Pembangunan Model Prediktif:** Membangun dan melatih model *Machine Learning* biner untuk memprediksi probabilitas risiko *dropout*.
+5. **Deployment:** Menyediakan antarmuka prototipe interaktif (berbasis *Cloud*) agar konselor akademik dapat menguji prediksi risiko per individu.
 
----
+## Persiapan
+* **Sumber Data:** Dataset "[Predict students' dropout and academic success](https://archive.ics.uci.edu/dataset/697/predict+students+dropout+and+academic+success)" (Realinho et al., 2021).
+* **Setup Environment:**
+  * IDE: Google Colab (EDA & Modeling) / VS Code (Streamlit)
+  * Pustaka Python Utama: Pandas, Matplotlib, Seaborn, Scikit-Learn, Streamlit, Joblib.
 
-## 2. Business Dashboard
-Untuk memantau kondisi demografi dan akademik mahasiswa, kami telah membangun sebuah **Business Dashboard** interaktif. Dasbor ini dirancang khusus untuk pihak manajemen kampus, seperti dekan dan biro keuangan, agar dapat melihat metrik-metrik krusial secara sekilas.
+## Business Dashboard
+*Business Dashboard* telah dirancang menggunakan Looker Studio guna memberikan alat pantau strategis bagi petinggi universitas. Terdapat visualisasi *Scatter Plot* (Korelasi Akademik) yang dengan jelas memetakan bagaimana penurunan jumlah SKS yang dilulusi berkorelasi langsung dengan kepastian *dropout*.
+👉 **[Klik untuk Mengakses Business Dashboard (Looker Studio)](https://datastudio.google.com/reporting/a5637ebd-5e69-4b1d-8064-a362a1c541aa)**
 
-**Komponen Utama Dasbor:**
-- **Scorecard Metrik Utama:** Menampilkan jumlah total mahasiswa, rata-rata usia, dan rata-rata nilai masuk.
-- **Distribusi Status Mahasiswa (Pie Chart):** Proporsi *real-time* dari mahasiswa yang berstatus Lulus (*Graduate*), Terdaftar (*Enrolled*), dan Putus Kuliah (*Dropout*).
-- **Analisis Finansial vs Dropout (100% Stacked Bar):** Menyoroti seberapa besar rasio *dropout* pada mahasiswa yang menunggak biaya kuliah dibandingkan yang lunas.
-- **Korelasi Akademik (Combo/Scatter Chart):** Memvisualisasikan perbandingan SKS yang diambil vs SKS yang berhasil lulus, serta hubungan nilai antar semester.
+## Menjalankan Sistem Machine Learning
+Prototipe Sistem Machine Learning ini dibangun menggunakan algoritma `RandomForestClassifier` (Binary Classification) dan diluncurkan melalui Streamlit Community Cloud.
 
-🔗 **[Akses Looker Studio Dashboard di Sini](#)** *(Ganti tanda # dengan link Looker Studio Anda)*
+**Cara Penggunaan:**
+1. Buka tautan prototipe aplikasi.
+2. Pada panel navigasi di sebelah kiri, masukkan data simulasi atau data nyata dari profil seorang mahasiswa.
+3. Klik tombol **Prediksi Status Risiko**.
+4. Sistem akan mengeksekusi model *Random Forest* untuk menampilkan klasifikasi (Beresiko Dropout / Aman) beserta tingkat probabilitasnya.
+👉 **[Klik untuk Mengakses Prototipe Machine Learning (Streamlit)](https://edutech-prediction-app.streamlit.app/)**
 
----
+## Conclusion
+Berdasarkan hasil pemodelan klasifikasi biner dan analisis Exploratory Data Analysis (EDA), disimpulkan bahwa faktor makroekonomi (seperti Inflasi) **tidak memiliki pengaruh** terhadap kelulusan individu. Sebaliknya, dua faktor mikro yang paling deterministik penyebab *dropout* adalah **stabilitas finansial** (tunggakan uang kuliah) dan **performa semester awal**. Model *Random Forest* biner terbukti mampu memetakan kompleksitas fitur tersebut dan memberikan probabilitas prediksi dengan keandalan yang jauh lebih tinggi dan fokus dibandingkan klasifikasi multikelas.
 
-## 3. Cara Penggunaan Model & Dashboard
-
-### A. Penggunaan Business Dashboard (Looker Studio)
-1. Buka tautan dasbor melalui web browser 
-🔗 **[Akses Dashboard di Sini](https://datastudio.google.com/reporting/a5637ebd-5e69-4b1d-8064-a362a1c541aa)**
-2. Gunakan **Panel Filter** di bagian atas (atau samping) untuk menyaring data spesifik. 
-   - Contoh: Pilih filter "Jurusan" untuk melihat tingkat kelulusan khusus pada jurusan *Informatics Engineering*.
-   - Pilih filter "Gender" untuk membandingkan performa antara mahasiswa laki-laki dan perempuan.
-3. Arahkan kursor (*hover*) ke berbagai elemen grafik untuk melihat angka riil dari persentase data.
-
-### B. Penggunaan Aplikasi Prediksi (Streamlit)
-Aplikasi ini digunakan oleh staf akademik untuk memprediksi status individu mahasiswa baru/aktif.
-🔗 **[Akses Streamlit Prediction App di Sini](https://edutech-prediction-app.streamlit.app/)**
-
-**Langkah Penggunaan:**
-1. Buka tautan Streamlit App.
-2. Di panel sebelah kiri (*sidebar*), masukkan profil data mahasiswa (contoh: Status Uang Kuliah, Penerima Beasiswa, Usia, Nilai Semester 1 dan 2).
-3. Setelah data lengkap, klik tombol **"Prediksi Status"** di layar utama.
-4. Sistem akan mengeluarkan hasil (Lulus / Dropout / Masih Terdaftar) lengkap beserta tingkat keyakinan (*probability*) dari model tersebut.
-
----
-
-## 4. Conclusion (Kesimpulan Analisis)
-Berdasarkan proses *Exploratory Data Analysis* (EDA) dan *Machine Learning Modeling* menggunakan *Random Forest Classifier*, kami menyimpulkan bahwa:
-
-1. **Faktor Finansial adalah Kunci Utama:** Mahasiswa yang memiliki tunggakan uang kuliah (`Tuition_fees_up_to_date = 0`) atau berstatus debitor memiliki persentase *dropout* yang sangat ekstrem (di atas 80%). Sebaliknya, kepemilikan beasiswa hampir menjamin retensi mahasiswa.
-2. **Kinerja Akademik Semester Awal Sangat Prediktif:** Jumlah unit mata kuliah (SKS) yang berhasil diselesaikan (*approved*) pada Semester 1 dan Semester 2 adalah prediktor terbaik. Kegagalan di awal masa studi berujung langsung pada potensi *dropout*.
-3. **Faktor Makroekonomi Tidak Signifikan:** Metrik seperti Inflasi, Tingkat Pengangguran (*Unemployment rate*), dan GDP memiliki korelasi linear mendekati nol, membuktikan keputusan *dropout* lebih dipengaruhi oleh faktor internal individu (akademik & ekonomi personal) dibanding kondisi negara secara umum.
-
----
-
-## 5. Rekomendasi Action Item
-Untuk menekan angka *dropout*, institusi/kampus direkomendasikan untuk melakukan tindak lanjut (*action item*) secara nyata berikut:
-
-1. **Intervensi Finansial Dini (Restrukturisasi Pembayaran):** 
-   - Biro Keuangan harus segera menghubungi mahasiswa yang status uang kuliahnya mulai menunggak sebelum Ujian Akhir Semester (UAS). 
-   - *Action:* Tawarkan program cicilan khusus (*installment plan*) atau keringanan tenggat waktu untuk mencegah mahasiswa mundur karena tekanan biaya secara mendadak.
-2. **Sistem Peringatan Dini Akademik (Early Warning System):**
-   - *Action:* Integrasikan model *Machine Learning* ini ke portal akademik Dosen Wali/Pembimbing Akademik. 
-   - Jika sistem mendeteksi nilai Semester 1 seorang mahasiswa berada di bawah rata-rata (terutama jika ia laki-laki tanpa beasiswa), Dosen Wali diwajibkan melakukan sesi konseling sebelum Semester 2 dimulai.
-3. **Pemberdayaan Beasiswa Tepat Sasaran:**
-   - Mengingat fitur `Scholarship_holder` memiliki dampak masif terhadap kelulusan, institusi disarankan menjalin kemitraan dengan pihak swasta/pemerintah untuk menambah kuota beasiswa, dengan memprioritaskan mahasiswa yang memiliki nilai baik namun berisiko tinggi secara finansial (*Debtor*).
-
----
-**Dibuat oleh:** Priadi Cuanda  
-**Email:** priadicuanda2904@gmail.com
-**ID Dicoding:** CDCC319D6Y0576
+## Rekomendasi Action Items
+Guna memitigasi tingkat *dropout*, pihak manajemen universitas direkomendasikan untuk menerapkan langkah-langkah konkret berikut:
+- **Prioritaskan Mahasiswa 'Enrolled' Berisiko Tinggi:** Ekstrak data probabilitas *dropout* dari mahasiswa yang berstatus `Enrolled` menggunakan model ini. Panggil mahasiswa dengan probabilitas *dropout* di atas 70% untuk sesi konseling segera.
+- **Restrukturisasi Kebijakan Finansial:** Tawarkan skema cicilan fleksibel (*installment plan*) untuk kelompok rentan agar tidak langsung mengambil keputusan untuk berhenti kuliah saat menunggak.
+- **Program Tutoring Khusus Mahasiswa Pria di Semester Dasar:** Data menunjukkan gender pria rentan gagal. Selenggarakan sesi kelas tambahan atau kelompok pendampingan sebaya (*peer-tutoring*) di semester pertama.
