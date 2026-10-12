@@ -32,18 +32,21 @@ def user_input_features():
     sem1_approved = st.sidebar.number_input('SKS Sem 1 Lulus', min_value=0, max_value=20, value=5)
     sem2_approved = st.sidebar.number_input('SKS Sem 2 Lulus', min_value=0, max_value=20, value=5)
 
+# Dictionary ini HARUS memiliki kunci dan urutan yang sama persis dengan X_train di Colab
     data = {
-        'Marital_status': 1, # Set nilai default untuk kolom yang tidak diisi manual di form
+        'Marital_status': 1,
         'Application_mode': 1,
         'Application_order': 1,
         'Course': 9119,
         'Daytime_evening_attendance': 1,
         'Previous_qualification': 1,
+        'Previous_qualification_grade': 130.0, 
         'Nacionality': 1,
         'Mothers_qualification': 1,
         'Fathers_qualification': 1,
         'Mothers_occupation': 1,
         'Fathers_occupation': 1,
+        'Admission_grade': 120.0,              
         'Displaced': 1,
         'Educational_special_needs': 0,
         'Debtor': debtor,
